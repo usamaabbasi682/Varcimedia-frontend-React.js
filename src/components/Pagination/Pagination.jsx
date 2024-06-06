@@ -7,7 +7,7 @@ const Pagination = ({ users, setPage,page }) => {
     }
     return (
         <>
-            <ul className="pagination">
+            <ul className="pagination mt-2 mb-0 pb-0" style={{ display:'flex',justifyContent:'flex-end' }}>
                 {/* {
                     users?.meta?.from != page ? 
                     <li className={'page-item'}>

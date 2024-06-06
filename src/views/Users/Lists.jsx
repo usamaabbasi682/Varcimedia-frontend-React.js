@@ -1,30 +1,57 @@
 import Loader from "components/Loader";
 import Pagination from "components/Pagination/Pagination";
+import { deleteUserRow } from "features/userSlice";
 import { userLists } from "features/userSlice";
+import useCheckLogin from "hooks/useCheckLogin";
 import useToken from "hooks/useToken";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, CardHeader, CardBody,CardTitle, Row, Col, Table } from "reactstrap";
+import { Link, Navigate } from "react-router-dom";
+import { Card, CardHeader, CardBody,CardTitle, Row, Col, Table,UncontrolledAlert } from "reactstrap";
 
 const Lists = () => {
+    useCheckLogin();
     const dispatch = useDispatch();
     const { users, isLoading } = useSelector((state) => state.userStore);
     const [page, setPage] = useState(1);
+    const [success, setSuccess] = useState(false);
+    const [search, setSearch] = useState('');
 
+    const deleteUser = (id) => {
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            dispatch(deleteUserRow(id));
+            dispatch(userLists(page))
+            setSuccess(true);
+        }
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setSearch(e.target.value);
+    }
     useEffect(() => {
-        dispatch(userLists(page))
-    },[page]);
+        dispatch(userLists(search,page))
+    },[page,search]);
     return (
         <>
             <div className="content">
                 <Row>
                     <Col md="12">
                         <Card>
+                            <UncontrolledAlert color="danger" fade={false} isOpen={success} toggle={() => setSuccess(false)}>
+                                User Deleted Successfully!
+                            </UncontrolledAlert>
                             <CardHeader>
-                                <CardTitle tag="h5">All Users</CardTitle>
-                                <p className="card-category">
-                                    All users are listed below
-                                </p>
+                                <div className="row pr-3 pl-3">
+                                    <div className="col-md-10">
+                                        <CardTitle tag="h5">All Users</CardTitle>
+                                        <p className="card-category">All users are listed below</p>
+                                    </div>
+                                    <div className="col-md-2 text-right pt-2">
+                                        <Link to="create" className="btn btn-dark btn-sm">Add User</Link>
+                                        <input type="search" value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
+                                    </div>
+                                </div>
                             </CardHeader>
                             <CardBody>
                                 <Table responsive>
@@ -43,7 +70,7 @@ const Lists = () => {
                                     <tbody>
                                         {
                                             !isLoading ?
-                                            users?.data?.map((user, index) => {
+                                            users?.data?.map?.((user, index) => {
                                                 return (
                                                     <>
                                                         <tr key={index}>
@@ -53,8 +80,8 @@ const Lists = () => {
                                                             <td>{user.email}</td>
                                                             <td className="text-secondary font-weight-bold">{user.role}</td>
                                                             <td className="text-right">
-                                                                <button className="btn btn-success btn-sm">Edit</button>
-                                                                <button className="btn btn-danger btn-sm">Delete</button>
+                                                                <Link to={`${user.id}/edit`} className="btn btn-success btn-sm">Edit</Link>
+                                                                <button className="btn btn-danger btn-sm" onClick={() => { deleteUser(user.id); }} >Delete</button>
                                                             </td>
                                                         </tr>
                                                     </>

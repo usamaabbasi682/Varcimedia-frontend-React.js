@@ -14,6 +14,7 @@ const Login = () => {
     const { data, isLoading } = useSelector((state) => state.authStore);
     const [authError, setAuthError] = useState('');
     const navigate = useNavigate();
+    const formikRef = useRef();
 
     const initialValues = {
         email: '',
@@ -28,15 +29,15 @@ const Login = () => {
 
     const handleSubmit = (values, formik) => {
         dispatch(authentication(values));
-        if (!isLoading) {
-            formik.setSubmitting(false);
-        }
+        formikRef.current = formik;
     }
 
 
     useEffect(() => {
         if (data.success) {
             sessionStorage.setItem('spa_token', data.token);
+            formikRef.current.setSubmitting(false);
+            formikRef.current.resetForm();
             navigate('/admin/dashboard');
         } else {
             setAuthError(data.message);

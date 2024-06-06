@@ -17,6 +17,7 @@ const  Dashboard = (props) => {
   const [activeColor, setActiveColor] = React.useState("info");
   const mainPanel = React.useRef();
   const location = useLocation();
+
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
@@ -29,16 +30,20 @@ const  Dashboard = (props) => {
       }
     };
   });
+
   React.useEffect(() => {
     mainPanel.current.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [location]);
+
   const handleActiveClick = (color) => {
     setActiveColor(color);
   };
+  
   const handleBgClick = (color) => {
     setBackgroundColor(color);
   };
+
   return (
     <div className="wrapper">
       <Sidebar
@@ -51,6 +56,7 @@ const  Dashboard = (props) => {
         <Navbar {...props} />
         <Routes>
           {routes.map((prop, key) => {
+            
             return (
               <Route
                 path={prop.path}

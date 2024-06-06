@@ -7,6 +7,9 @@ import Maps from "views/Map.js";
 import UserPage from "views/User.js";
 import UpgradeToPro from "views/Upgrade.js";
 import Lists from "views/Users/Lists";
+import Projects from "views/Projects/Projects";
+import CreateUser from "views/Users/CreateUser";
+import EditUser from "views/Users/EditUser";
 
 var routes = [
   {
@@ -15,6 +18,7 @@ var routes = [
     icon: "nc-icon nc-bank",
     component: <Dashboard />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/users",
@@ -22,6 +26,29 @@ var routes = [
     icon: "nc-icon nc-user-run",
     component: <Lists />,
     layout: "/admin",
+    visiable:true,
+  },
+  {
+    path: "/users/create",
+    name: "Create User",
+    component: <CreateUser />,
+    layout: "/admin",
+    visiable:false,
+  },
+  {
+    path: "/users/:id/edit",
+    name: "Edit User",
+    component: <EditUser />,
+    layout: "/admin",
+    visiable:false,
+  },
+  {
+    path: "/projects",
+    name: "Projects",
+    icon: "nc-icon nc-single-copy-04",
+    component: <Projects />,
+    layout: "/admin",
+    visiable:true,
   },
   {
     path: "/icons",
@@ -29,6 +56,7 @@ var routes = [
     icon: "nc-icon nc-diamond",
     component: <Icons />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/maps",
@@ -36,6 +64,7 @@ var routes = [
     icon: "nc-icon nc-pin-3",
     component: <Maps />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/notifications",
@@ -43,6 +72,7 @@ var routes = [
     icon: "nc-icon nc-bell-55",
     component: <Notifications />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/user-page",
@@ -50,6 +80,7 @@ var routes = [
     icon: "nc-icon nc-single-02",
     component: <UserPage />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/tables",
@@ -57,6 +88,7 @@ var routes = [
     icon: "nc-icon nc-tile-56",
     component: <TableList />,
     layout: "/admin",
+    visiable:true,
   },
   {
     path: "/typography",
@@ -64,6 +96,7 @@ var routes = [
     icon: "nc-icon nc-caps-small",
     component: <Typography />,
     layout: "/admin",
+    visiable:true,
   },
   {
     pro: true,
@@ -72,6 +105,7 @@ var routes = [
     icon: "nc-icon nc-spaceship",
     component: <UpgradeToPro />,
     layout: "/admin",
+    visiable:true,
   },
 ];
 export default routes;
