@@ -1,7 +1,7 @@
-import React,{useState,useEffect,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { userCreate } from "features/userSlice";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert } from "reactstrap";
 import * as Yup from 'yup';
 import useCheckLogin from "hooks/useCheckLogin";
@@ -9,7 +9,7 @@ import useCheckLogin from "hooks/useCheckLogin";
 const CreateUser = () => {
     useCheckLogin();
     const dispatch = useDispatch();
-    const {users,isLoading} = useSelector((state) => state.userStore);
+    const { users, isLoading } = useSelector((state) => state.userStore);
     const [errors, setErrors] = useState({ username: '', email: '' });
     const [success, setSuccess] = useState(false);
     const formikRef = useRef(null);
@@ -44,17 +44,16 @@ const CreateUser = () => {
             }
         } else {
             if (formikRef.current != null) formikRef.current.setSubmitting(false);
-            setErrors({username:users?.message?.username?.[0] ?? '',email:users?.message?.email?.[0] ?? ''});
+            setErrors({ username: users?.message?.username?.[0] ?? '', email: users?.message?.email?.[0] ?? '' });
         }
 
         setTimeout(() => {
             setErrors({ username: '', email: '' });
-            // setSuccess(false);
         }, 3000);
 
     }, [users]);
 
-    
+
     return (
         <>
             <div className="content">

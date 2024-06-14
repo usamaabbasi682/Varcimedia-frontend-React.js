@@ -19,7 +19,6 @@ const Login = () => {
     const initialValues = {
         email: '',
         password: '',
-        remember: '',
     };
 
     const validate = Yup.object({

@@ -7,15 +7,13 @@ const initialState = {
     error: null,
 };
 
-const userLists = createAsyncThunk('/users', async (search,page) => {
+const userLists = createAsyncThunk('/users', async (data) => {
     try {
         let url = '';
-        if (search != null) {
-            url = `/users?search=${search}`;
-            console.log('insearch');
+        if (data.search != null) {
+            url = `/users?search=${data.search}`;
         } else {
-            console.log('in else');
-            url = `/users?page=${page}`;
+            url = `/users?page=${data.page}`;
         }
         const response = await axios({
             url: url,
@@ -94,7 +92,6 @@ const updateUser = createAsyncThunk('/users/update', async ({id,user}) => {
 const deleteUserRow = createAsyncThunk('/users/delete', async (id) => {
     try {
         const url = `/users/${id}`;
-        console.log(url);
         const response = await axios({
             url: url,
             method: "DELETE",
