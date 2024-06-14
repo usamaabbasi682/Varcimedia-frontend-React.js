@@ -10,6 +10,8 @@ import Lists from "views/Users/Lists";
 import Projects from "views/Projects/Projects";
 import CreateUser from "views/Users/CreateUser";
 import EditUser from "views/Users/EditUser";
+import CreateProject from "views/Projects/CreateProject";
+import EditProject from "views/Projects/EditProject";
 
 var routes = [
   {
@@ -49,6 +51,20 @@ var routes = [
     component: <Projects />,
     layout: "/admin",
     visiable:true,
+  },
+  {
+    path: "/projects/create",
+    name: "Create Project",
+    component: <CreateProject />,
+    layout: "/admin",
+    visiable:false,
+  },
+  {
+    path: "/projects/:id/edit",
+    name: "Edit Project",
+    component: <EditProject />,
+    layout: "/admin",
+    visiable:false,
   },
   {
     path: "/icons",

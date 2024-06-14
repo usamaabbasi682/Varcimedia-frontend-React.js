@@ -15,7 +15,7 @@ const Lists = () => {
     const { users, isLoading } = useSelector((state) => state.userStore);
     const [page, setPage] = useState(1);
     const [success, setSuccess] = useState(false);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(null);
 
     const deleteUser = (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
@@ -30,17 +30,21 @@ const Lists = () => {
         setSearch(e.target.value);
     }
     useEffect(() => {
-        dispatch(userLists(search,page))
-    },[page,search]);
+        dispatch(userLists({search:search,page:page}))
+    },[search,page]);
     return (
         <>
             <div className="content">
                 <Row>
                     <Col md="12">
                         <Card>
-                            <UncontrolledAlert color="danger" fade={false} isOpen={success} toggle={() => setSuccess(false)}>
-                                User Deleted Successfully!
-                            </UncontrolledAlert>
+                            {
+                                !isLoading ?
+                                    <UncontrolledAlert color="danger" fade={false} isOpen={success} toggle={() => setSuccess(false)}>
+                                        User Deleted Successfully!
+                                    </UncontrolledAlert>
+                                    : ''
+                            }
                             <CardHeader>
                                 <div className="row pr-3 pl-3">
                                     <div className="col-md-10">
@@ -49,7 +53,9 @@ const Lists = () => {
                                     </div>
                                     <div className="col-md-2 text-right pt-2">
                                         <Link to="create" className="btn btn-dark btn-sm">Add User</Link>
-                                        <input type="search" value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
+                                    </div>
+                                    <div className="col-md-12 text-right">
+                                        <input type="search"  style={{ width:'14%' }} value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
                                     </div>
                                 </div>
                             </CardHeader>
