@@ -4,6 +4,8 @@ import axios from 'axios';
 const initialState = {
     users: [],
     isLoading: false,
+    creating:false,
+    updating: false,
     error: null,
 };
 
@@ -120,11 +122,11 @@ const userSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(userCreate.fulfilled, (state, action) => {
-            state.isLoading = false;
+            state.creating = false;
             state.users = action.payload;
         });
         builder.addCase(userCreate.pending, (state, action) => {
-            state.isLoading = true;
+            state.creating = true;
         });
         builder.addCase(editUser.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -134,11 +136,11 @@ const userSlice = createSlice({
             state.isLoading = true;
         });
         builder.addCase(updateUser.fulfilled, (state, action) => {
-            state.isLoading = false;
+            state.updating = false;
             state.users = action.payload;
         });
         builder.addCase(updateUser.pending, (state, action) => {
-            state.isLoading = true;
+            state.updating = true;
         });
         builder.addCase(deleteUserRow.fulfilled, (state, action) => {
             state.isLoading = false;

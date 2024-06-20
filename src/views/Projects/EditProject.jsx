@@ -1,18 +1,23 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert } from "reactstrap";
 import { admin, client, writer, editor } from "features/projectSlice";
 import { Form, Formik, Field, ErrorMessage } from "formik"; 
 import * as Yup from 'yup';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { editProject } from "features/projectSlice";
 import Loader from "components/Loader";
+import { updateProject } from "features/projectSlice";
+import useCheckLogin from "hooks/useCheckLogin";
 
 const EditProject = () => {
+    useCheckLogin();
     const dispatch = useDispatch();
     const project = useSelector((state) => state.projectStore);
     const [success, setSuccess] = useState(false);
     const { id } = useParams();
+    const projRef = useRef(null);
+    const navigate = useNavigate();
 
     const selectedUser = (data, role) => {
         const user = project?.projects?.data?.users?.find((user) => user.role === role);
@@ -23,7 +28,7 @@ const EditProject = () => {
         title: project?.projects && project?.projects?.data?.title,
         name: project?.projects && project?.projects?.data?.name,
         description: project?.projects && project?.projects?.data?.description,
-        end_date: '1975-07-16 20:31:00',
+        end_date: project?.projects && project?.projects?.data?.end_date_without_format,
         status: project?.projects && project?.projects?.data?.status,
         work_status: project?.projects && project?.projects?.data?.work_status,
         file: '',
@@ -40,11 +45,47 @@ const EditProject = () => {
         end_date: Yup.string().required('Please Select End-Date'),
         status: Yup.string().required('Please Select Status'),
         work_status: Yup.string().required('Please Select Work Status'),
-        file:Yup.string().required('Please Select File')
+        // file:Yup.string().required('Please Select File')
     });
 
     const handleSubmit = (values, formik) => {
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('name', values.name);
+        formData.append('description', values.description);
+        formData.append('end_date', values.end_date);
+        formData.append('status',values.status);
+        formData.append('work_status',values.work_status);
 
+        if (values.file.length > 0) {
+            for (let i = 0; i < values.file.length; i++) {
+                formData.append('file[]', values.file[i]);
+            }   
+        }
+
+        const projectUser = [];
+        if (values.admin != '') {
+            projectUser.push(values.admin);
+        }
+        if (values.client != '') {
+            projectUser.push(values.client);
+        }
+        if (values.writer != '') {
+            projectUser.push(values.writer);
+        }
+        if (values.editor != '') {
+            projectUser.push(values.editor);
+        }
+
+        if (projectUser.length != 0) {
+            projectUser.forEach(id => {
+                formData.append('associate_users[]', id);
+            });
+        }
+
+        // formData.forEach((data)=>{console.log(data);});
+        dispatch(updateProject({formData:formData,id:id}));
+        projRef.current = formik;
     }
 
     const status = [
@@ -62,12 +103,20 @@ const EditProject = () => {
         dispatch(client());
         dispatch(writer());
         dispatch(editor());
-    }, []);
+    }, [id]);
+
+    useEffect(() => {
+        if (project?.updating) {
+            projRef.current.setSubmitting(false);
+            setSuccess(true);
+        } else {
+            projRef?.current?.setSubmitting(false);
+        }
+    },[project?.updating]);
     return (
         <>
             <div className="content">
                 <Row>
-                    {!project?.isLoading ? 
                     <Formik initialValues={initialValues} validationSchema={validate} onSubmit={handleSubmit} enableReinitialize={true}>
                         {
                             formik => {
@@ -75,9 +124,10 @@ const EditProject = () => {
                                     <>
                                         <Col md="9">
                                             <Card>
-                                                <UncontrolledAlert color="success" fade={false} isOpen={success} toggle={() => setSuccess(false)}>
-                                                    User Created Successfully!
-                                                </UncontrolledAlert>
+                                                {project?.updating ?
+                                                    <UncontrolledAlert color="success" fade={false} isOpen={success} toggle={() => setSuccess(false)}>
+                                                        User Created Successfully!
+                                                    </UncontrolledAlert>: ''}
                                                 <CardHeader>
                                                     <CardTitle tag="h5">Edit Project</CardTitle>
                                                     {/* <p className="card-category">Fill out all below fields.</p> */}
@@ -174,9 +224,19 @@ const EditProject = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="form-group">
-                                                            <Field type="submit" disabled={!formik.isValid} className="btn btn-primary" name="btn_create" value="Create Project" />
+                                                        {!project?.isLoading ?
+                                                            <div className="form-group">
+                                                            <div className="row">
+                                                                <div className="col-md-5 d-flex">
+                                                                    <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_update" value="Update Project" /> &nbsp;
+                                                                     <button type="button" onClick={() => navigate('/admin/projects') } className="btn btn-danger"><i className="fa fa-arrow-circle-left" /> Back</button>
+                                                                </div>
+                                                                <div className="col-md-3 mt-2">
+                                                                    {project?.updating ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        : ''}
                                                     </Form>
                                                 </CardBody>
                                             </Card>
@@ -186,7 +246,7 @@ const EditProject = () => {
                                                 <CardBody>
                                                     <div className="form-group">
                                                         <label htmlFor="file">Select File</label>
-                                                        <Field type="file" multiple name="file" className="form-control" />
+                                                        <Field type="file" value={undefined} onChange={(e)=>{formik.setFieldValue('file',e.target.files)}} accept='.pdf,.docx,.doc,.pptx,.xml,.txt' multiple name="file" className="form-control" />
                                                         <ErrorMessage name="file" component="span" className="text-danger" />
                                                     </div>
                                                     
@@ -247,8 +307,7 @@ const EditProject = () => {
                             }
                         }
                     </Formik>
-                        : <Col md="12"><Card><CardHeader><CardTitle tag="h5">Edit Project</CardTitle></CardHeader><CardBody><Loader /></CardBody></Card></Col>
-                    }
+                     
                 </Row>
             </div>
         </>

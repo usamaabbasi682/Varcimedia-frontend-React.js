@@ -17,6 +17,10 @@ const Lists = () => {
     const [success, setSuccess] = useState(false);
     const [search, setSearch] = useState(null);
 
+    const reload = () => {
+        dispatch(userLists({ search: search, page: page }));
+    }
+
     const deleteUser = (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             dispatch(deleteUserRow(id));
@@ -30,7 +34,7 @@ const Lists = () => {
         setSearch(e.target.value);
     }
     useEffect(() => {
-        dispatch(userLists({search:search,page:page}))
+        dispatch(userLists({ search: search, page: page }));
     },[search,page]);
     return (
         <>
@@ -52,7 +56,8 @@ const Lists = () => {
                                         <p className="card-category">All users are listed below</p>
                                     </div>
                                     <div className="col-md-2 text-right pt-2">
-                                        <Link to="create" className="btn btn-dark btn-sm">Add User</Link>
+                                        <Link to="create" className="btn btn-dark btn-sm"><i className="fa fa-user-plus" />&nbsp;&nbsp;Add New User</Link>
+                                        <button type="text" onClick={reload} className="btn btn-info btn-sm"><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
                                     </div>
                                     <div className="col-md-12 text-right">
                                         <input type="search"  style={{ width:'14%' }} value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />

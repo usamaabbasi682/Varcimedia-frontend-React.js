@@ -5,6 +5,8 @@ const initialState = {
     projects: [],
     isLoading: false,
     creating:false,
+    updating: false,
+    projectUPdateData: [],
     admins:[],
     clients:[],
     writers:[],
@@ -13,7 +15,6 @@ const initialState = {
 
 const projectLists = createAsyncThunk('/projects', async (data) => {
     try {
-        console.log(data);
         var url = ''
         if (data.search != null) {
             url = `/projects?search=${data.search}`;
@@ -131,9 +132,43 @@ const editProject = createAsyncThunk('/projects/edit', async (id) => {
     }
 });
 
+const updateProject = createAsyncThunk('/project/update', async (data) => {
+    try {
+        const url = `/projects/${data.id}?_method=PUT`;
+        const response = await axios({
+            url: url,
+            method: "POST",
+            data:data.formData,
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
+
 const deleteProjectRow = createAsyncThunk('/projects/delete', async (id) => {
     try {
         const url = `/projects/${id}`;
+        const response = await axios({
+            url: url,
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
+const deleteProjectFile = createAsyncThunk('/projects/file/delete', async (id) => {
+    try {
+        const url = `/file/${id}/remove`;
         const response = await axios({
             url: url,
             method: "DELETE",
@@ -212,9 +247,23 @@ const projectSlice = createSlice({
         builder.addCase(editProject.pending, (state, action) => {
             state.isLoading = true;
         });
+        builder.addCase(updateProject.fulfilled, (state, action) => {
+            state.projectUPdateData = action.payload;
+            state.updating = false;
+        });
+        builder.addCase(updateProject.pending, (state, action) => {
+            state.updating = true;
+        });
+        builder.addCase(deleteProjectFile.fulfilled, (state, action) => {
+            state.projects = action.payload;
+            state.isLoading = false;
+        });
+        builder.addCase(deleteProjectFile.pending, (state, action) => {
+            state.isLoading = true;
+        });
     }
 });
 
 export const { resetProjectStore } = projectSlice.actions;
-export { projectLists,admin,client,writer,editor,createProject,deleteProjectRow,editProject };
+export { projectLists,admin,client,writer,editor,createProject,deleteProjectRow,editProject,updateProject,deleteProjectFile };
 export default projectSlice;

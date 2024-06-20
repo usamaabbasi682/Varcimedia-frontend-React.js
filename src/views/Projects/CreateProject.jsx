@@ -2,16 +2,20 @@ import { createProject } from "features/projectSlice";
 import { resetProjectStore } from "features/projectSlice";
 import { admin,client,writer,editor } from "features/projectSlice";
 import { Form, Formik, Field, ErrorMessage } from "formik";
+import useCheckLogin from "hooks/useCheckLogin";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert } from "reactstrap";
+import { useNavigate } from "react-router-dom";
+import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert, Button } from "reactstrap";
 import * as Yup from 'yup';
 
 const CreateProject = () => {
+    useCheckLogin();
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch();
     const roles = useSelector((state) => state.projectStore);
     const projRef = useRef(null);
+    const navigate = useNavigate();
 
     const initialValues = {
         title:'',
@@ -24,7 +28,6 @@ const CreateProject = () => {
         writer: '',
         editor:'',
     };
-
     const validate = Yup.object({
         title: Yup.string().required('Please Enter Title').max(100, 'Full Name must be 100 characters or less'),
         name: Yup.string().required('Please Enter Name').max(100,'Name must be 100 characters or less'),
@@ -201,12 +204,15 @@ const CreateProject = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="row">
-                                                            <div className="col-md-3">
-                                                                <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_create" value="Create Project" />
-                                                            </div>
-                                                            <div className="col-md-3 mt-3">
-                                                                {roles.creating ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                        <div className="form-group">
+                                                            <div className="row">
+                                                                <div className="col-md-4 d-flex">
+                                                                    <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_create" value="Create Project" />
+                                                                    <Button type="button" onClick={() => navigate('/admin/projects') } className="btn btn-danger"><i className="fa fa-arrow-circle-left" /> Back</Button>
+                                                                </div>
+                                                                <div className="col-md-3 mt-3">
+                                                                   {roles.creating ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </Form>
@@ -218,7 +224,7 @@ const CreateProject = () => {
                                                 <CardBody>
                                                     <div className="form-group">
                                                         <label htmlFor="file">Select File</label>
-                                                        <Field type="file" multiple  onChange={(e) => {formik.setFieldValue('file',e.target.files)}} value={undefined} name="file" className="form-control" />
+                                                        <Field type="file" multiple accept='.pdf,.docx,.doc,.pptx,.xml,.txt'  onChange={(e) => {formik.setFieldValue('file',e.target.files)}} value={undefined} name="file" className="form-control" />
                                                         <ErrorMessage name="file"component="span" className="text-danger" />
                                                     </div>
                                                 </CardBody>

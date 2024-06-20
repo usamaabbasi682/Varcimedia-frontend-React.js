@@ -17,6 +17,10 @@ const Projects = () => {
     const [page, setPage] = useState(1);
     const [success, setSuccess] = useState(false);
 
+    const reload = () => {
+        dispatch(projectLists({search:search,page:page}));
+    }
+
     const handleSearch = (e) => {
         e.preventDefault();
         setSearch(e.target.value);
@@ -57,7 +61,8 @@ const Projects = () => {
                                         <Link to={'create'} className="btn btn-info btn-sm">My Projects</Link>
                                     </div> */}
                                     <div className="col-md-2 text-right pt-2">
-                                        <Link to={'create'} className="btn btn-dark btn-sm">Add Project</Link>
+                                        <Link to={'create'} className="btn btn-dark btn-sm"><i className="fa fa-plus" />&nbsp;&nbsp;Add Project</Link>
+                                        <button type="text" onClick={reload} className="btn btn-info btn-sm"><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
                                     </div>
                                     <div className="col-md-12 text-right">
                                         <input type="search" style={{ width:'14%' }} value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
@@ -103,6 +108,7 @@ const Projects = () => {
                                                             <td>{ project.end_date}</td>
                                                             <td><span className={project.status === 'publish' ? 'badge badge-warning badge-pill' : 'badge badge-secondary badge-pill'}>{project.status}</span></td>
                                                             <td className="text-right">
+                                                                <Link to={`${project.id}/files`} className="btn btn-dark btn-sm">Files</Link>
                                                                 <Link to={`${project.id}/edit`} className="btn btn-success btn-sm">Edit</Link>
                                                                 <button onClick={()=>{deleteProject(project.id)}} className="btn btn-danger btn-sm">Delete</button>
                                                             </td>

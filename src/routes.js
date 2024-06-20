@@ -12,6 +12,7 @@ import CreateUser from "views/Users/CreateUser";
 import EditUser from "views/Users/EditUser";
 import CreateProject from "views/Projects/CreateProject";
 import EditProject from "views/Projects/EditProject";
+import Files from "views/Projects/Files";
 
 var routes = [
   {
@@ -63,6 +64,13 @@ var routes = [
     path: "/projects/:id/edit",
     name: "Edit Project",
     component: <EditProject />,
+    layout: "/admin",
+    visiable:false,
+  },
+  {
+    path: "/projects/:id/files",
+    name: "Project Files",
+    component: <Files />,
     layout: "/admin",
     visiable:false,
   },
