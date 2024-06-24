@@ -5,14 +5,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert } from "reactstrap";
 import * as Yup from 'yup';
 import useCheckLogin from "hooks/useCheckLogin";
+import { useNavigate } from "react-router-dom";
 
 const CreateUser = () => {
     useCheckLogin();
     const dispatch = useDispatch();
-    const { users, isLoading } = useSelector((state) => state.userStore);
+    const { users, creating } = useSelector((state) => state.userStore);
     const [errors, setErrors] = useState({ username: '', email: '' });
     const [success, setSuccess] = useState(false);
-    const formikRef = useRef(null);
+    const userRef = useRef(null);
+    const navigate = useNavigate();
 
     const initialValues = {
         full_name: '',
@@ -32,18 +34,18 @@ const CreateUser = () => {
 
     const handleSubmit = (values, formik) => {
         dispatch(userCreate(values));
-        formikRef.current = formik;
+        userRef.current = formik;
     }
 
     useEffect(() => {
         if (users.success) {
             setSuccess(true);
-            if (formikRef.current != null) {
-                formikRef.current.setSubmitting(false);
-                formikRef.current.resetForm();
+            if (userRef.current != null) {
+                userRef.current.setSubmitting(false);
+                userRef.current.resetForm();
             }
         } else {
-            if (formikRef.current != null) formikRef.current.setSubmitting(false);
+            if (userRef.current != null) userRef.current.setSubmitting(false);
             setErrors({ username: users?.message?.username?.[0] ?? '', email: users?.message?.email?.[0] ?? '' });
         }
 
@@ -107,13 +109,16 @@ const CreateUser = () => {
                                                                 <option value="editor">Editor</option>
                                                             </Field>
                                                             <ErrorMessage name="role" component="span" className="text-danger" />
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-md-3">
-                                                                <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_create" value="Create User" />
-                                                            </div>
-                                                            <div className="col-md-3 mt-3">
-                                                                {isLoading ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                        </div>                                                        
+                                                        <div className="form-group">
+                                                            <div className="row">
+                                                                <div className="col-md-6 d-flex">
+                                                                    <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_create_user" value="Create User" />
+                                                                    <button type="button" onClick={() => navigate('/admin/users') } className="btn btn-danger"><i className="fa fa-arrow-circle-left" /> Back</button>
+                                                                </div>
+                                                                <div className="col-md-3 mt-3">
+                                                                    {creating ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </Form>

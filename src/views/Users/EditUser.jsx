@@ -2,17 +2,21 @@ import Loader from "components/Loader";
 import { updateUser } from "features/userSlice";
 import { editUser } from "features/userSlice";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import useCheckLogin from "hooks/useCheckLogin";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col,UncontrolledAlert } from "reactstrap";
 import * as Yup from 'yup';
 
 const EditUser = () => {
+    useCheckLogin();
     const dispatch = useDispatch();
-    const { users, isLoading } = useSelector((state) => state.userStore);
+    const { users,updating,isLoading } = useSelector((state) => state.userStore);
     const { id } = useParams();
-    const [success,setSuccess] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
+    const userRef = useRef(null);
 
     const roles = [
         {
@@ -48,7 +52,8 @@ const EditUser = () => {
     });
 
     const handleSubmit = (values, formik) => {
-        dispatch(updateUser({id:id, user:values}));
+        dispatch(updateUser({ id: id, user: values }));
+        userRef.current = formik;
     }
 
     useEffect(() => {
@@ -58,6 +63,7 @@ const EditUser = () => {
     useEffect(() => {
         if (users.success && users.message == 'User updated successfully') {
             setSuccess(true);
+            userRef.current.setSubmitting(false);
         }
     },[users]);
     return (
@@ -75,8 +81,7 @@ const EditUser = () => {
                                 {/* <p className="card-category">Fill out all below fields.</p> */}
                             </CardHeader>
                             <CardBody>
-                                {!isLoading ?
-                                    <Formik initialValues={initialValues} validationSchema={validate} onSubmit={handleSubmit} enableReinitialize={true}>
+                                <Formik initialValues={initialValues} validationSchema={validate} onSubmit={handleSubmit} enableReinitialize={true}>
                                     {
                                         formik => {
                                             return (
@@ -111,16 +116,25 @@ const EditUser = () => {
                                                             </Field>
                                                             <ErrorMessage name="role" component="span" className="text-danger" />
                                                         </div>
+                                                        {!isLoading ?
                                                         <div className="form-group">
-                                                            <Field type="submit" className="btn btn-primary" value="Create User" />
-                                                             {isLoading ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                            <div className="row">
+                                                                <div className="col-md-6 d-flex">
+                                                                    <Field type="submit" disabled={!formik.isValid || formik.isSubmitting} className="btn btn-primary" name="btn_edit_user" value="Update User" />
+                                                                    <button type="button" onClick={() => navigate('/admin/users') } className="btn btn-danger"><i className="fa fa-arrow-circle-left" /> Back</button>
+                                                                </div>
+                                                                <div className="col-md-3 mt-3">
+                                                                    {updating ? <div class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div> : ''}
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        : ''}
                                                     </Form>
                                                 </>
                                             );
                                         }
                                     }
-                                </Formik> : <Loader />}
+                                </Formik>
                             </CardBody>
                         </Card>
                     </Col>

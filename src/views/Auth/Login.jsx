@@ -9,7 +9,6 @@ import { authentication } from "features/Auth/loginSlice";
 
 const Login = () => {
     useAuth();
-    const emailReference = useRef('');
     const dispatch = useDispatch();
     const { data, isLoading } = useSelector((state) => state.authStore);
     const [authError, setAuthError] = useState('');
@@ -39,17 +38,14 @@ const Login = () => {
             formikRef.current.resetForm();
             navigate('/admin/dashboard');
         } else {
+            formikRef?.current?.setSubmitting(false);
+            formikRef?.current?.resetForm();
             setAuthError(data.message);
         }
         setTimeout(() => {
             setAuthError('')
         },2000);
     }, [data]);
-    
-    useEffect(() => {
-        emailReference.current.focus();
-    },[]);
-    
     return (
         <>
             <div className="content">
@@ -73,7 +69,7 @@ const Login = () => {
                                                     <Form>
                                                         <div className="form-group">
                                                             <label htmlFor="email">Email</label>
-                                                            <Field type="text" innerRef={emailReference} name="email" className="form-control" autoComplete="email" placeholder="Enter email-address" />
+                                                            <Field type="text" name="email" className="form-control" autoComplete="email" placeholder="Enter email-address" />
                                                             <ErrorMessage name="email" component="span" className="text-danger" />
                                                         </div>
                                                         <div className="form-group">
