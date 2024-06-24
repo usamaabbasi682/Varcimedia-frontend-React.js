@@ -1,12 +1,12 @@
-import { createProject } from "features/projectSlice";
-import { resetProjectStore } from "features/projectSlice";
-import { admin,client,writer,editor } from "features/projectSlice";
-import { Form, Formik, Field, ErrorMessage } from "formik";
-import useCheckLogin from "hooks/useCheckLogin";
 import React, { useEffect, useRef, useState } from "react";
+import { Form, Formik, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { admin, client, writer, editor, resetProjectStore, createProject } from "features/projectSlice";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, UncontrolledAlert, Button } from "reactstrap";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import useCheckLogin from "hooks/useCheckLogin";
 import * as Yup from 'yup';
 
 const CreateProject = () => {
@@ -66,6 +66,7 @@ const CreateProject = () => {
                 formData.append('associate_users[]', id);
             });
         }
+        console.log(values);
         dispatch(createProject(formData));
         projRef.current = formik;
     }
@@ -126,7 +127,9 @@ const CreateProject = () => {
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="description">Description</label>
-                                                            <Field as="textarea" name="description" className="form-control" placeholder="Enter Description" />
+                                                            <ReactQuill theme="snow" style={{ height:"100px" }} name="description" value={formik.values.description} onChange={value => formik.setFieldValue('description', value)} />
+                                                        </div>
+                                                        <div className="form-group mt-5">
                                                             <ErrorMessage name="description" component="span" className="text-danger" />
                                                         </div>
                                                         <div className="row">

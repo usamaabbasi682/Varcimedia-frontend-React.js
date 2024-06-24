@@ -55,9 +55,9 @@ const Lists = () => {
                                         <CardTitle tag="h5">All Users</CardTitle>
                                         <p className="card-category">All users are listed below</p>
                                     </div>
-                                    <div className="col-md-2 text-right pt-2">
+                                    <div className="col-md-2 text-right pt-2" style={{ padding: '0px' }}>
+                                        <button style={{ backgroundColor:"#4cce70" }} type="text" onClick={reload} className="btn btn-info btn-sm"><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
                                         <Link to="create" className="btn btn-dark btn-sm"><i className="fa fa-user-plus" />&nbsp;&nbsp;Add New User</Link>
-                                        <button type="text" onClick={reload} className="btn btn-info btn-sm"><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
                                     </div>
                                     <div className="col-md-12 text-right">
                                         <input type="search"  style={{ width:'14%' }} value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
@@ -73,6 +73,7 @@ const Lists = () => {
                                             <th>Full Name</th>
                                             <th>Email</th>
                                             <th>Role</th>
+                                            <th>Created At</th>
                                             <th className="text-right">
                                                 Actions
                                             </th>
@@ -89,10 +90,11 @@ const Lists = () => {
                                                             <td>{user.username}</td>
                                                             <td>{user.full_name}</td>
                                                             <td>{user.email}</td>
-                                                            <td className="text-secondary font-weight-bold">{user.role}</td>
+                                                            <td><span className="badge badge-info badge-pill" style={{ backgroundColor: '#415d95',color:'white' }}>{user.role}</span></td>
+                                                             <td>{user.created_at}</td>
                                                             <td className="text-right">
-                                                                <Link to={`${user.id}/edit`} className="btn btn-success btn-sm">Edit</Link>
-                                                                <button className="btn btn-danger btn-sm" onClick={() => { deleteUser(user.id); }} >Delete</button>
+                                                                <Link to={`${user.id}/edit`} className="btn btn-success btn-sm"><i className="fa fa-edit" /></Link>&nbsp;
+                                                                <button style={{ backgroundColor:"#e73f4c" }} className="btn btn-sm" onClick={() => { deleteUser(user.id); }} ><i className="fa fa-trash" /></button>
                                                             </td>
                                                         </tr>
                                                     </>

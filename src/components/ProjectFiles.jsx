@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col, Button,UncontrolledAlert } from "reactstrap";
 import { useDispatch } from "react-redux";
 import { deleteProjectFile } from "features/projectSlice";
@@ -44,9 +44,9 @@ const ProjectFiles = ({ files, isLoading }) => {
                                                             </span>
                                                         </Col>
                                                         <Col className="text-right" md="3" xs="3">
-                                                            <a target="__blank" href={file.url} className="btn-round btn-icon" color="success" outline size="sm">
-                                                                <i className="fa fa-eye" />
-                                                            </a>
+                                                            <Link to={file?.url} className="btn-round btn-icon"  target="_blank" download color="black" outline size="sm">
+                                                                <i className="fa fa-download text-dark" />
+                                                            </Link>
                                                             <Button onClick={() => deleteFile(file?.id)} className=" btn-icon" color="danger" outline size="sm">
                                                                 <i className="fa fa-trash" />
                                                             </Button>

@@ -18,8 +18,32 @@ const projectLists = createAsyncThunk('/projects', async (data) => {
         var url = ''
         if (data.search != null) {
             url = `/projects?search=${data.search}`;
+        } else if (data.work_status != null) {
+            url = `/projects?work_status=${data.work_status}`;
         } else {
             url = `/projects?page=${data.page}`;
+        } 
+        
+        const response = await axios({
+            url:url,
+            method: "GET",
+            headers: {
+                'Authorization':`Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
+const myProjectLists = createAsyncThunk('/my-projects', async (data) => {
+    try {
+        var url = ''
+        if (data.search != null) {
+            url = `/my-projects?search=${data.search}`;
+        } else {
+            url = `/my-projects?page=${data.page}`;
         } 
         
         const response = await axios({
@@ -132,6 +156,22 @@ const editProject = createAsyncThunk('/projects/edit', async (id) => {
     }
 });
 
+const viewProject = createAsyncThunk('/projects/view', async (id) => {
+    try {
+        const url = `/projects/${id}`;
+        const response = await axios({
+            url: url,
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
 const updateProject = createAsyncThunk('/project/update', async (data) => {
     try {
         const url = `/projects/${data.id}?_method=PUT`;
@@ -198,6 +238,13 @@ const projectSlice = createSlice({
         builder.addCase(projectLists.pending, (state, action) => {
             state.isLoading = true;
         });
+        builder.addCase(myProjectLists.fulfilled, (state, action) => {
+            state.projects = action.payload;
+            state.isLoading = false;
+        });
+        builder.addCase(myProjectLists.pending, (state, action) => {
+            state.isLoading = true;
+        });
         builder.addCase(admin.fulfilled, (state, action) => {
             state.admins = action.payload;
             state.isLoading = false;
@@ -247,6 +294,13 @@ const projectSlice = createSlice({
         builder.addCase(editProject.pending, (state, action) => {
             state.isLoading = true;
         });
+        builder.addCase(viewProject.fulfilled, (state, action) => {
+            state.projects = action.payload;
+            state.isLoading = false;
+        });
+        builder.addCase(viewProject.pending, (state, action) => {
+            state.isLoading = true;
+        });
         builder.addCase(updateProject.fulfilled, (state, action) => {
             state.projectUPdateData = action.payload;
             state.updating = false;
@@ -265,5 +319,5 @@ const projectSlice = createSlice({
 });
 
 export const { resetProjectStore } = projectSlice.actions;
-export { projectLists,admin,client,writer,editor,createProject,deleteProjectRow,editProject,updateProject,deleteProjectFile };
+export { projectLists,admin,client,writer,editor,createProject,deleteProjectRow,editProject,updateProject,deleteProjectFile,myProjectLists,viewProject };
 export default projectSlice;

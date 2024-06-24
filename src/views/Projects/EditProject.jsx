@@ -6,9 +6,10 @@ import { Form, Formik, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { useNavigate, useParams } from "react-router-dom";
 import { editProject } from "features/projectSlice";
-import Loader from "components/Loader";
 import { updateProject } from "features/projectSlice";
 import useCheckLogin from "hooks/useCheckLogin";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const EditProject = () => {
     useCheckLogin();
@@ -146,7 +147,9 @@ const EditProject = () => {
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="description">Description</label>
-                                                            <Field as="textarea" name="description" className="form-control" placeholder="Enter Description" />
+                                                            <ReactQuill theme="snow" style={{ height:"100px" }} name="description" value={formik.values.description} onChange={value => formik.setFieldValue('description', value)} />
+                                                        </div>
+                                                        <div className="form-group mt-5">
                                                             <ErrorMessage name="description" component="span" className="text-danger" />
                                                         </div>
                                                         <div className="row">

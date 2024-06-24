@@ -1,4 +1,4 @@
-import { projectLists } from "features/projectSlice";
+import { myProjectLists } from "features/projectSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import Pagination from "components/Pagination/Pagination";
 import { deleteProjectRow } from "features/projectSlice";
 
 
-const Projects = () => {
+const MyProjects = () => {
     useCheckLogin();
     const dispatch = useDispatch();
     const [search, setSearch] = useState(null);
@@ -18,7 +18,7 @@ const Projects = () => {
     const [success, setSuccess] = useState(false);
 
     const reload = () => {
-        dispatch(projectLists({search:search,page:page}));
+        dispatch(myProjectLists({search:search,page:page}));
     }
 
     const handleSearch = (e) => {
@@ -30,13 +30,13 @@ const Projects = () => {
     const deleteProject = (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             dispatch(deleteProjectRow(id));
-            dispatch(projectLists({ search: search, page: page }))
+            dispatch(myProjectLists({ search: search, page: page }))
             setSuccess(true);
         }
     }
 
     useEffect(() => { 
-        dispatch(projectLists({search:search,page:page}));
+        dispatch(myProjectLists({search:search,page:page}));
     }, [search,page]);
     return (
         <>
@@ -54,15 +54,15 @@ const Projects = () => {
                             <CardHeader>
                                 <div className="row pr-3 pl-3">
                                     <div className="col-md-8">
-                                        <CardTitle tag="h5">All Projects</CardTitle>
-                                        <p className="card-category">All projects are listed below</p>
+                                        <CardTitle tag="h5">Admin Projects</CardTitle>
+                                        <p className="card-category">All admin projects are listed below</p>
                                     </div>
                                     <div className="col-md-2 text-right pt-2" style={{ padding:'0px' }}>
-                                        <Link to={'/admin/my-projects'} className="btn btn-info btn-sm"><i className="fa fa-user" />&nbsp;&nbsp;My Projects</Link>
+                                        <Link to={'/admin/projects'} className="btn btn-danger btn-sm"><i className="fa fa-arrow-circle-left" />&nbsp;&nbsp;Go Back</Link>
                                     </div>
                                     <div className="col-md-2 text-right pt-2"  style={{ padding:'0px' }}>
                                         <button type="text" onClick={reload} className="btn btn-sm" style={{ backgroundColor:"#4cce70" }}><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
-                                        <Link to={'create'} className="btn btn-dark btn-sm"><i className="fa fa-plus" />&nbsp;&nbsp;Add Project</Link>
+                                        <Link to={'/admin/projects/create'} className="btn btn-dark btn-sm"><i className="fa fa-plus" />&nbsp;&nbsp;Add Project</Link>
                                     </div>
                                     <div className="col-md-12 text-right">
                                         <input type="search" style={{ width:'14%' }} value={search} onChange={handleSearch} className="form-control form-control-sm" placeholder="Search" />
@@ -141,4 +141,4 @@ const Projects = () => {
     )
 }
 
-export default Projects;
+export default MyProjects;
