@@ -1,8 +1,10 @@
 import Insight from "components/Insight";
+import useCheckLogin from "hooks/useCheckLogin";
 import React, { useState } from "react";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
 
 const ProjectInsight = () => {
+    useCheckLogin();
     const [status, setStatus] = useState('pending');
   return (
     <div className="content">
