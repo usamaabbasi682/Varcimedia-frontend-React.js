@@ -10,9 +10,11 @@ import { updateProject } from "features/projectSlice";
 import useCheckLogin from "hooks/useCheckLogin";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import useGetRole from "hooks/useGetRole";
 
 const EditProject = () => {
     useCheckLogin();
+    const role = useGetRole();
     const dispatch = useDispatch();
     const project = useSelector((state) => state.projectStore);
     const [success, setSuccess] = useState(false);
@@ -20,8 +22,8 @@ const EditProject = () => {
     const projRef = useRef(null);
     const navigate = useNavigate();
 
-    const selectedUser = (data, role) => {
-        const user = project?.projects?.data?.users?.find((user) => user.role === role);
+    const selectedUser = (role) => {
+        const user = project?.projects?.data?.usersEditable?.find((user) => user.role === role);
         return user ? user.id : '';
     }
 
@@ -33,20 +35,20 @@ const EditProject = () => {
         status: project?.projects && project?.projects?.data?.status,
         work_status: project?.projects && project?.projects?.data?.work_status,
         file: '',
-        admin: project?.projects && selectedUser(project?.projects?.data?.users,'admin'),
-        client: project?.projects && selectedUser(project?.projects?.data?.users,'client'),
-        writer: project?.projects && selectedUser(project?.projects?.data?.users,'writer'),
-        editor:project?.projects && selectedUser(project?.projects?.data?.users,'editor'),
+        admin: project?.projects && selectedUser('admin'),
+        client: project?.projects && selectedUser('client'),
+        writer: project?.projects && selectedUser('writer'),
+        editor:project?.projects && selectedUser('editor'),
     };
 
     const validate = Yup.object({
         title: Yup.string().required('Please Enter Title').max(100, 'Full Name must be 100 characters or less'),
         name: Yup.string().required('Please Enter Name').max(100,'Name must be 100 characters or less'),
         description: Yup.string().required('Please Enter Description'),
-        end_date: Yup.string().required('Please Select End-Date'),
         status: Yup.string().required('Please Select Status'),
         work_status: Yup.string().required('Please Select Work Status'),
-        // file:Yup.string().required('Please Select File')
+        end_date: Yup.string().nullable(),
+        file:Yup.string().nullable()
     });
 
     const handleSubmit = (values, formik) => {
@@ -152,6 +154,7 @@ const EditProject = () => {
                                                         <div className="form-group mt-5">
                                                             <ErrorMessage name="description" component="span" className="text-danger" />
                                                         </div>
+                                                        {role == 'admin' ? 
                                                         <div className="row">
                                                             <div className="col-md-12"><label>Associate Users</label></div>
                                                             <div className="col-md-3">
@@ -227,6 +230,7 @@ const EditProject = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        :''}
                                                         {!project?.isLoading ?
                                                             <div className="form-group">
                                                             <div className="row">
@@ -255,6 +259,7 @@ const EditProject = () => {
                                                     
                                                 </CardBody>
                                             </Card>
+                                            {role == 'admin' ?
                                             <Card>
                                                 <CardBody>
                                                     <div className="form-group">
@@ -264,6 +269,8 @@ const EditProject = () => {
                                                     </div>
                                                 </CardBody>
                                             </Card>
+                                            : ''}
+                                            {role == 'admin' ? 
                                             <Card>
                                                 <CardBody>
                                                     <div className="form-group">
@@ -284,6 +291,8 @@ const EditProject = () => {
                                                     </div>
                                                 </CardBody>
                                             </Card>
+                                                : ''}
+                                            {role == 'admin' ? 
                                             <Card>
                                                 <CardBody>
                                                     <div className="form-group">
@@ -303,7 +312,8 @@ const EditProject = () => {
                                                         <ErrorMessage name="work_status" component="span" className="text-danger" />
                                                     </div>
                                                 </CardBody>
-                                            </Card>
+                                                </Card>
+                                            : ''}
                                         </Col>
                                     </>
                                 );

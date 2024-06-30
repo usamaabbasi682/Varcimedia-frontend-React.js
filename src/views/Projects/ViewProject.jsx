@@ -1,5 +1,5 @@
 import { viewProject } from "features/projectSlice";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Card, CardHeader, CardBody, CardTitle, Row, Col } from "reactstrap";
@@ -12,10 +12,11 @@ const ViewProject = () => {
     const dispatch = useDispatch();
     const {projects,isLoading} = useSelector((state) => state.projectStore);
     const { id } = useParams();
+    const [recallProject, setRecallProject] = useState(false);
 
     useEffect(() => {
         dispatch(viewProject(id));
-    },[]);
+    },[recallProject]);
     return (
         <>
             <div className="content">
@@ -50,7 +51,7 @@ const ViewProject = () => {
                     <Col md="12">
                         <Card>
                             <CardBody>
-                                <Chat chatUsers={projects?.data && projects?.data?.users} loading={isLoading} project_id={id} />
+                                <Chat recallProject={recallProject} setRecallProject={setRecallProject} chatUsers={projects?.data && projects?.data?.users} loading={isLoading} project_id={id} />
                             </CardBody>
                         </Card>
                     </Col>

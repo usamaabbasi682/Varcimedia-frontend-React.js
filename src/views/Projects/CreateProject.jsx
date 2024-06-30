@@ -8,9 +8,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import useCheckLogin from "hooks/useCheckLogin";
 import * as Yup from 'yup';
+import useGetRole from "hooks/useGetRole";
 
 const CreateProject = () => {
     useCheckLogin();
+    const role = useGetRole();
     const [success, setSuccess] = useState(false);
     const dispatch = useDispatch();
     const roles = useSelector((state) => state.projectStore);
@@ -32,8 +34,8 @@ const CreateProject = () => {
         title: Yup.string().required('Please Enter Title').max(100, 'Full Name must be 100 characters or less'),
         name: Yup.string().required('Please Enter Name').max(100,'Name must be 100 characters or less'),
         description: Yup.string().required('Please Enter Description'),
-        end_date: Yup.string().required('Please Select End-Date'),
-        file:Yup.string().required('Please Select File')
+        end_date: Yup.string().nullable(),
+        file:Yup.string().nullable()
     });
 
     const handleSubmit = (values, formik) => {
@@ -66,7 +68,6 @@ const CreateProject = () => {
                 formData.append('associate_users[]', id);
             });
         }
-        console.log(values);
         dispatch(createProject(formData));
         projRef.current = formik;
     }
@@ -132,81 +133,83 @@ const CreateProject = () => {
                                                         <div className="form-group mt-5">
                                                             <ErrorMessage name="description" component="span" className="text-danger" />
                                                         </div>
-                                                        <div className="row">
-                                                            <div className="col-md-12"><label>Associate Users</label></div>
-                                                            <div className="col-md-3">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="admin">Admin</label>
-                                                                    <Field as="select" name="admin" className="form-control">
-                                                                        <option value="">Select Admin</option>
-                                                                        {
-                                                                            roles?.admins?.data?.map?.((val, key) => {
-                                                                                return (
-                                                                                    <>
-                                                                                        <option value={val.id}>{ val.full_name}</option>
-                                                                                    </>
-                                                                                );
-                                                                            })
-                                                                        }
-                                                                    </Field>
-                                                                    <ErrorMessage name="admin" component="span" className="text-danger" />
+                                                        {role == 'admin' ?
+                                                            <div className="row">
+                                                                <div className="col-md-12"><label>Associate Users</label></div>
+                                                                <div className="col-md-3">
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="admin">Admin</label>
+                                                                        <Field as="select" name="admin" className="form-control">
+                                                                            <option value="">Select Admin</option>
+                                                                            {
+                                                                                roles?.admins?.data?.map?.((val, key) => {
+                                                                                    return (
+                                                                                        <>
+                                                                                            <option value={val.id}>{val.full_name}</option>
+                                                                                        </>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </Field>
+                                                                        <ErrorMessage name="admin" component="span" className="text-danger" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="client">Client</label>
+                                                                        <Field as="select" name="client" className="form-control">
+                                                                            <option value="">Select client</option>
+                                                                            {
+                                                                                roles?.clients?.data?.map?.((val, key) => {
+                                                                                    return (
+                                                                                        <>
+                                                                                            <option value={val.id}>{val.full_name}</option>
+                                                                                        </>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </Field>
+                                                                        <ErrorMessage name="client" component="span" className="text-danger" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="writer">Writer</label>
+                                                                        <Field as="select" name="writer" className="form-control">
+                                                                            <option value="">Select Writer</option>
+                                                                            {
+                                                                                roles?.writers?.data?.map?.((val, key) => {
+                                                                                    return (
+                                                                                        <>
+                                                                                            <option value={val.id}>{val.full_name}</option>
+                                                                                        </>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </Field>
+                                                                        <ErrorMessage name="writer" component="span" className="text-danger" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-3">
+                                                                    <div className="form-group">
+                                                                        <label htmlFor="editor">Editor</label>
+                                                                        <Field as="select" name="editor" className="form-control">
+                                                                            <option value="">Select Editor</option>
+                                                                            {
+                                                                                roles?.editors?.data?.map?.((val, key) => {
+                                                                                    return (
+                                                                                        <>
+                                                                                            <option value={val.id}>{val.full_name}</option>
+                                                                                        </>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </Field>
+                                                                        <ErrorMessage name="editor" component="span" className="text-danger" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-3">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="client">Client</label>
-                                                                    <Field as="select" name="client" className="form-control">
-                                                                        <option value="">Select client</option>
-                                                                         {
-                                                                            roles?.clients?.data?.map?.((val, key) => {
-                                                                                return (
-                                                                                    <>
-                                                                                        <option value={val.id}>{ val.full_name}</option>
-                                                                                    </>
-                                                                                );
-                                                                            })
-                                                                        }
-                                                                    </Field>
-                                                                    <ErrorMessage name="client" component="span" className="text-danger" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-3">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="writer">Writer</label>
-                                                                    <Field as="select" name="writer" className="form-control">
-                                                                        <option value="">Select Writer</option>
-                                                                        {
-                                                                            roles?.writers?.data?.map?.((val, key) => {
-                                                                                return (
-                                                                                    <>
-                                                                                        <option value={val.id}>{ val.full_name}</option>
-                                                                                    </>
-                                                                                );
-                                                                            })
-                                                                        }
-                                                                    </Field>
-                                                                    <ErrorMessage name="writer" component="span" className="text-danger" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-3">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="editor">Editor</label>
-                                                                    <Field as="select" name="editor" className="form-control">
-                                                                        <option value="">Select Editor</option>
-                                                                        {
-                                                                            roles?.editors?.data?.map?.((val, key) => {
-                                                                                return (
-                                                                                    <>
-                                                                                        <option value={val.id}>{ val.full_name}</option>
-                                                                                    </>
-                                                                                );
-                                                                            })
-                                                                        }
-                                                                    </Field>
-                                                                    <ErrorMessage name="editor" component="span" className="text-danger" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        : ''}
                                                         <div className="form-group">
                                                             <div className="row">
                                                                 <div className="col-md-4 d-flex">
@@ -232,15 +235,17 @@ const CreateProject = () => {
                                                     </div>
                                                 </CardBody>
                                             </Card>
-                                            <Card>
-                                                <CardBody>
-                                                    <div className="form-group">
-                                                        <label htmlFor="end_date">End Date</label>
-                                                        <Field type="datetime-local" name="end_date" className="form-control" />
-                                                        <ErrorMessage name="end_date" component="span" className="text-danger" />
-                                                    </div>
-                                                </CardBody>
-                                            </Card>
+                                            {role == 'admin' ?
+                                                <Card>
+                                                    <CardBody>
+                                                        <div className="form-group">
+                                                            <label htmlFor="end_date">End Date</label>
+                                                            <Field type="datetime-local" name="end_date" className="form-control" />
+                                                            <ErrorMessage name="end_date" component="span" className="text-danger" />
+                                                        </div>
+                                                    </CardBody>
+                                                </Card>
+                                            : ''}
                                         </Col>
                                     </>
                                 );

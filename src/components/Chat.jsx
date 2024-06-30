@@ -1,27 +1,37 @@
-import React, { useEffect, useState } from "react";
-import Loader from "./Loader";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { saveMessage } from "features/chatSlice";
 import { getChats } from "features/chatSlice";
 import SkeletonLoader from "./SkeletonLoader";
 
-const Chat = ({ chatUsers, loading,project_id }) => {
+const Chat = ({ chatUsers, loading, project_id, recallProject, setRecallProject }) => {
     const dispatch = useDispatch();
     const {chat,isLoading,chats,chatsLoading} = useSelector((state) => state.chatStore);
     const [activeUser, setActiveUser] = useState(null);
     const [sender, setSender] = useState(null);
     const [receiver, setReceiver] = useState(null);
     const [messages, setMessages] = useState('');
+    const chatBoxRef = useRef(null);
+
+    const scrollToBottom = () => {
+        chatBoxRef.current?.scrollTo({
+            top: chatBoxRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
+    };
 
     const handleActiveUser = (id) => {
         setActiveUser(id);
         setReceiver(id);
-        dispatch(getChats({sender_id:sender,receiver_id:id,project_id:project_id}));
+        dispatch(getChats({ sender_id: sender, receiver_id: id, project_id: project_id }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(saveMessage({sender_id:sender,receiver_id:receiver,project_id:project_id,message:messages}));
+        if (messages !== '') {
+            dispatch(saveMessage({ sender_id: sender, receiver_id: receiver, project_id: project_id, message: messages }));
+            setRecallProject(!recallProject);   
+        }
     }
 
     useEffect(() => {
@@ -32,7 +42,8 @@ const Chat = ({ chatUsers, loading,project_id }) => {
     useEffect(() => {
         if (chat?.success) {
             setMessages('');
-        } 
+        }
+        scrollToBottom();
     }, [chat]);
     return (
         <>
@@ -45,8 +56,7 @@ const Chat = ({ chatUsers, loading,project_id }) => {
                         </div>
                         <div className="messages-box">
                                 <div className="list-group rounded-0">
-                                    {!loading ?
-                                    chatUsers?.map?.((user, index) => {
+                                    {chatUsers?.map?.((user, index) => {
                                         return (
                                             <>
                                                 <a onClick={()=>handleActiveUser(user.id)} key={index} className={`list-group-item list-group-item-action list-group-item-light rounded-0 ${activeUser === user.id ? 'active' : ''}`}>
@@ -55,23 +65,23 @@ const Chat = ({ chatUsers, loading,project_id }) => {
                                                         <div className="media-body ml-4">
                                                             <div className="d-flex align-items-center justify-content-between mb-1">
                                                                 <h6 className="mb-0">{user.full_name}  <span style={{ fontSize:'10px',color:'#bdbdbd' }}>{user.role}</span></h6>
-                                                                <small className="small font-weight-bold">25 Dec</small>
+                                                                <small className="small font-weight-bold">{user?.latest_message?.created_at}</small>
                                                             </div>
                                                             <p className="font-italic mb-0 text-small">
-                                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit
+                                                                {user?.latest_message?.message}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </a>
                                             </>
                                         );
-                                    }): <Loader/>}
+                                    })}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-7 px-0">
-                        <div className="px-4 py-5 chat-box bg-white">
+                        <div className="px-4 py-5 chat-box bg-white"  ref={chatBoxRef}>
                             {
                                 activeUser != null ?
                                 !chatsLoading ?  

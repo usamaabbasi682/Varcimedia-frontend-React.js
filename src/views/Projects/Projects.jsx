@@ -7,10 +7,12 @@ import Loader from "components/Loader";
 import useCheckLogin from "hooks/useCheckLogin";
 import Pagination from "components/Pagination/Pagination";
 import { deleteProjectRow } from "features/projectSlice";
+import useGetRole from "hooks/useGetRole";
 
 
 const Projects = () => {
     useCheckLogin();
+    const role = useGetRole();
     const dispatch = useDispatch();
     const [search, setSearch] = useState(null);
     const { projects, isLoading } = useSelector((state) => state.projectStore);
@@ -57,8 +59,8 @@ const Projects = () => {
                                         <CardTitle tag="h5">All Projects</CardTitle>
                                         <p className="card-category">All projects are listed below</p>
                                     </div>
-                                    <div className="col-md-2 text-right pt-2" style={{ padding:'0px' }}>
-                                        <Link to={'/admin/my-projects'} className="btn btn-info btn-sm"><i className="fa fa-user" />&nbsp;&nbsp;My Projects</Link>
+                                    <div className="col-md-2 text-right pt-2" style={{ padding: '0px' }}>
+                                        {role == 'admin' ? <Link to={'/admin/my-projects'} className="btn btn-info btn-sm"><i className="fa fa-user" />&nbsp;&nbsp;My Projects</Link> : ''}
                                     </div>
                                     <div className="col-md-2 text-right pt-2"  style={{ padding:'0px' }}>
                                         <button type="text" onClick={reload} className="btn btn-sm" style={{ backgroundColor:"#4cce70" }}><i className="nc-icon font-weight-bold nc-refresh-69" /></button>
@@ -87,7 +89,7 @@ const Projects = () => {
                                     <tbody>
                                         {
                                             !isLoading ?
-                                            projects?.data?.map?.((project, index) => {
+                                                projects?.data?.map?.((project, index) => { 
                                                 return (
                                                     <>
                                                         <tr key={index}>
@@ -96,16 +98,17 @@ const Projects = () => {
                                                             <td>{project.name}</td>
                                                             <td>
                                                                 {
+                                                                    project.users.length > 0 ?
                                                                     project?.users?.map?.((user, userIndex) => {
                                                                         return (
                                                                             <>
                                                                                 <span className="badge badge-pill" style={{ backgroundColor: '#415d95',color:'white' }}>{user.full_name} | {user.role}</span>
                                                                             </>
                                                                         );
-                                                                    })
+                                                                    }) : 'N/A'
                                                                 }
                                                             </td>
-                                                            <td>{ project.end_date}</td>
+                                                            <td>{ project.end_date ? project.end_date : 'N/A'}</td>
                                                             <td><span className={project.work_status === 'completed' ? 'badge badge-success badge-pill' : 'badge badge-warning badge-pill'}>{project.work_status}</span></td>
                                                             <td className="text-right">
                                                                 <Link to={`${project.id}/files`} style={{ backgroundColor:"#f3b23a" }} className="btn btn-dark btn-sm"><i className="fa fa-file" tooltip="Files"/></Link>&nbsp;

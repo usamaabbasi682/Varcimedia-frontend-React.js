@@ -1,5 +1,5 @@
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 9px;
 }
 
 ::-webkit-scrollbar-track {
@@ -11,7 +11,6 @@
     width: 1em;
     background-color: #ddd;
     outline: 1px solid slategrey;
-    border-radius: 1rem;
 }
 
 .text-small {
