@@ -20,7 +20,7 @@ const Projects = () => {
     const [success, setSuccess] = useState(false);
 
     const reload = () => {
-        dispatch(projectLists({search:search,page:page}));
+        dispatch(projectLists({search:search,page:page,insight:1}));
     }
 
     const handleSearch = (e) => {
@@ -32,13 +32,13 @@ const Projects = () => {
     const deleteProject = (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             dispatch(deleteProjectRow(id));
-            dispatch(projectLists({ search: search, page: page }))
+            dispatch(projectLists({ search: search, page: page, insight:1 }))
             setSuccess(true);
         }
     }
 
     useEffect(() => { 
-        dispatch(projectLists({search:search,page:page}));
+        dispatch(projectLists({search:search,page:page,insight:1}));
     }, [search,page]);
     return (
         <>

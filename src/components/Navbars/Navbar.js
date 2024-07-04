@@ -1,5 +1,7 @@
+import useGetData from "hooks/useGetData";
+import useGetRole from "hooks/useGetRole";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -20,12 +22,16 @@ import {
 
 import routes from "routes.js";
 
-const  Header= (props) => {
+const Header = (props) => {
+  const role = useGetRole();
+  const user = useGetData();
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
   const location = useLocation();
+  const redirect = useNavigate();
+
   const toggle = () => {
     if (isOpen) {
       setColor("transparent");
@@ -34,9 +40,11 @@ const  Header= (props) => {
     }
     setIsOpen(!isOpen);
   };
+
   const dropdownToggle = (e) => {
     setDropdownOpen(!dropdownOpen);
   };
+
   const getBrand = () => {
     let brandName = "Default Brand";
     routes.map((prop, key) => {
@@ -47,10 +55,12 @@ const  Header= (props) => {
     });
     return brandName;
   };
+
   const openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
     sidebarToggle.current.classList.toggle("toggled");
   };
+
   // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && isOpen) {
@@ -59,9 +69,18 @@ const  Header= (props) => {
       setColor("transparent");
     }
   };
+
+  const logout = (e) => {
+    e.preventDefault();
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("spa_token");
+    redirect("/login");
+  };
+
   React.useEffect(() => {
     window.addEventListener("resize", updateColor.bind(this));
   });
+
   React.useEffect(() => {
     if (
       window.innerWidth < 993 &&
@@ -71,13 +90,10 @@ const  Header= (props) => {
       sidebarToggle.current.classList.toggle("toggled");
     }
   }, [location]);
+
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
-    <Navbar
-      color={
-        location.pathname.indexOf("full-screen-maps") !== -1 ? "dark" : color
-      }
-      expand="lg"
+    <Navbar color={location.pathname.indexOf("full-screen-maps") !== -1 ? "dark" : color} expand="lg"
       className={
         location.pathname.indexOf("full-screen-maps") !== -1
           ? "navbar-absolute fixed-top"
@@ -99,7 +115,7 @@ const  Header= (props) => {
               <span className="navbar-toggler-bar bar3" />
             </button>
           </div>
-          <NavbarBrand href="/">{getBrand()}</NavbarBrand>
+          <NavbarBrand href="javascript:void(0)">{getBrand()} | {user?.full_name} | <span  className="badge badge-light">{ role }</span></NavbarBrand>
         </div>
         <NavbarToggler onClick={toggle}>
           <span className="navbar-toggler-bar navbar-kebab" />
@@ -126,11 +142,7 @@ const  Header= (props) => {
                 </p>
               </Link>
             </NavItem>
-            <Dropdown
-              nav
-              isOpen={dropdownOpen}
-              toggle={(e) => dropdownToggle(e)}
-            >
+            <Dropdown nav isOpen={dropdownOpen} toggle={(e) => dropdownToggle(e)} >
               <DropdownToggle caret nav>
                 <i className="nc-icon nc-bell-55" />
                 <p>
@@ -144,12 +156,12 @@ const  Header= (props) => {
               </DropdownMenu>
             </Dropdown>
             <NavItem>
-              <Link to="#pablo" className="nav-link btn-rotate">
-                <i className="nc-icon nc-settings-gear-65" />
+              <button onClick={logout} className="btn btn-sm bg-light border-0">
+                <i className="nc-icon nc-button-power text-danger font-weight-bold" />
                 <p>
-                  <span className="d-lg-none d-md-block">Account</span>
+                  <span className="d-lg-none d-md-block">Logout</span>
                 </p>
-              </Link>
+              </button>
             </NavItem>
           </Nav>
         </Collapse>

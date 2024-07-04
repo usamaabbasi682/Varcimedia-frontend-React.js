@@ -62,18 +62,34 @@ const Dashboard = (props) => {
                 </>
               );
             } else {
-              if (prop.identity != 'user') {
-                return (
-                  <>
-                    <Route path={prop.path} element={prop.component} key={key} exact />
-                  </>
-                );
+              if (role == 'writer' || role == 'editor') {
+                  if (prop.identity != 'user' && prop.identity != 'projects') {
+                    return (
+                      <>
+                        <Route path={prop.path} element={prop.component} key={key} exact />
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        <Route path={prop.path} element={<Navigate to="/admin/dashboard" />} key={key} exact />
+                      </>
+                    );
+                  }
               } else {
-                return (
-                  <>
-                    <Route path={prop.path} element={<Navigate to="/admin/dashboard" />} key={key} exact />
-                  </>
-                );
+                  if (prop.identity != 'user') {
+                    return (
+                      <>
+                        <Route path={prop.path} element={prop.component} key={key} exact />
+                      </>
+                    );
+                  } else {
+                    return (
+                      <>
+                        <Route path={prop.path} element={<Navigate to="/admin/dashboard" />} key={key} exact />
+                      </>
+                    );
+                  }
               }
             }
           })}

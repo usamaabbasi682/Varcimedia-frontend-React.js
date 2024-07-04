@@ -12,7 +12,7 @@ const Insight = ({status}) => {
     const [search, setSearch] = useState(null);
 
     useEffect(() => {
-        dispatch(projectLists({ search: search, work_status:status, page: page }));
+        dispatch(projectLists({ search: search, work_status:status, page: page, insight:0}));
     },[status]);
     return (
         <>
