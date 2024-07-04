@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
@@ -12,11 +12,15 @@ import routes from "routes.js";
 
 var ps;
 
-const  Dashboard = (props) => {
+const Dashboard = (props) => {
+  // const [role, setRole] = React.useState(null);
   const [backgroundColor, setBackgroundColor] = React.useState("black");
   const [activeColor, setActiveColor] = React.useState("info");
   const mainPanel = React.useRef();
   const location = useLocation();
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const role = user?.role;
+    
 
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -46,25 +50,32 @@ const  Dashboard = (props) => {
 
   return (
     <div className="wrapper">
-      <Sidebar
-        {...props}
-        routes={routes}
-        bgColor={backgroundColor}
-        activeColor={activeColor}
-      />
+      <Sidebar {...props} routes={routes} bgColor={backgroundColor} activeColor={activeColor} role={role} />
       <div className="main-panel" ref={mainPanel}>
         <Navbar {...props} />
         <Routes>
           {routes.map((prop, key) => {
-            
-            return (
-              <Route
-                path={prop.path}
-                element={prop.component}
-                key={key}
-                exact
-              />
-            );
+            if (role == 'admin') {
+              return (
+                <>
+                  <Route path={prop.path} element={prop.component} key={key} exact />
+                </>
+              );
+            } else {
+              if (prop.identity != 'user') {
+                return (
+                  <>
+                    <Route path={prop.path} element={prop.component} key={key} exact />
+                  </>
+                );
+              } else {
+                return (
+                  <>
+                    <Route path={prop.path} element={<Navigate to="/admin/dashboard" />} key={key} exact />
+                  </>
+                );
+              }
+            }
           })}
         </Routes>
         <Footer fluid />

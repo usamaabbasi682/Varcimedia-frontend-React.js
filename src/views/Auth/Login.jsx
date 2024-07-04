@@ -33,7 +33,6 @@ const Login = () => {
 
     useEffect(() => {
         if (data.success) {
-            console.log(data.data);
             sessionStorage.setItem('spa_token', data.token);
             sessionStorage.setItem('user', JSON.stringify(data.data));
             formikRef.current.setSubmitting(false);

@@ -1,11 +1,7 @@
 import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
-import Maps from "views/Map.js";
 import UserPage from "views/User.js";
-import UpgradeToPro from "views/Upgrade.js";
 import Lists from "views/Users/Lists";
 import Projects from "views/Projects/Projects";
 import CreateUser from "views/Users/CreateUser";
@@ -19,6 +15,7 @@ import ViewProject from "views/Projects/ViewProject";
 
 var routes = [
   {
+    identity: "dashboard",
     path: "/dashboard",
     name: "Dashboard",
     icon: "nc-icon nc-bank",
@@ -27,6 +24,7 @@ var routes = [
     visiable:true,
   },
   {
+    identity:"user",
     path: "/users",
     name: "Users",
     icon: "nc-icon nc-user-run",
@@ -35,6 +33,7 @@ var routes = [
     visiable:true,
   },
   {
+    identity:"user",
     path: "/users/create",
     name: "Create User",
     component: <CreateUser />,
@@ -42,6 +41,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity:"user",
     path: "/users/:id/edit",
     name: "Edit User",
     component: <EditUser />,
@@ -49,6 +49,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity: "projects",
     path: "/projects",
     name: "Projects",
     icon: "nc-icon nc-single-copy-04",
@@ -57,6 +58,7 @@ var routes = [
     visiable:true,
   },
   {
+    identity: "projects",
     path: "/project-activity",
     name: "Project Insights",
     icon: "nc-icon nc-time-alarm",
@@ -65,6 +67,7 @@ var routes = [
     visiable:true,
   },
   {
+    identity: "projects",
     path: "/my-projects",
     name: "My Projects",
     component: <MyProjects />,
@@ -72,6 +75,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity: "projects",
     path: "/project-discussion/:id",
     name: "Project Discussion",
     component: <ViewProject />,
@@ -79,6 +83,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity: "projects",
     path: "/projects/create",
     name: "Create Project",
     component: <CreateProject />,
@@ -86,6 +91,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity: "projects",
     path: "/projects/:id/edit",
     name: "Edit Project",
     component: <EditProject />,
@@ -93,6 +99,7 @@ var routes = [
     visiable:false,
   },
   {
+    identity: "projects",
     path: "/projects/:id/files",
     name: "Project Files",
     component: <Files />,
@@ -104,14 +111,6 @@ var routes = [
     name: "Icons",
     icon: "nc-icon nc-diamond",
     component: <Icons />,
-    layout: "/admin",
-    visiable:true,
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    component: <Maps />,
     layout: "/admin",
     visiable:true,
   },
@@ -128,31 +127,6 @@ var routes = [
     name: "User Profile",
     icon: "nc-icon nc-single-02",
     component: <UserPage />,
-    layout: "/admin",
-    visiable:true,
-  },
-  {
-    path: "/tables",
-    name: "Table List",
-    icon: "nc-icon nc-tile-56",
-    component: <TableList />,
-    layout: "/admin",
-    visiable:true,
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: "nc-icon nc-caps-small",
-    component: <Typography />,
-    layout: "/admin",
-    visiable:true,
-  },
-  {
-    pro: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "nc-icon nc-spaceship",
-    component: <UpgradeToPro />,
     layout: "/admin",
     visiable:true,
   },

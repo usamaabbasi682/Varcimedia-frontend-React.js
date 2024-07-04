@@ -53,21 +53,31 @@ const Sidebar = (props) => {
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
           {props.routes.map((prop, key) => {
-            return (
-              <>
-                {prop.visiable ?               <li
-                className={
-                  activeRoute(prop.path) + (prop.pro ? " active-pro" : "")
+            if (props.role == 'admin' && prop.visiable) {
+                return (
+                  <>
+                    <li className={activeRoute(prop.path) + (prop.pro ? " active-pro" : "")} key={key}>
+                      <NavLink to={prop.layout + prop.path} className="nav-NavLink">
+                        <i className={prop.icon} />
+                        <p>{prop.name}</p>
+                      </NavLink>
+                    </li>
+                  </>
+                );
+            } else {
+                if(prop.identity != 'user' && prop.visiable) {
+                  return (
+                    <>
+                      <li className={activeRoute(prop.path) + (prop.pro ? " active-pro" : "")} key={key}>
+                        <NavLink to={prop.layout + prop.path} className="nav-NavLink">
+                          <i className={prop.icon} />
+                          <p>{prop.name}</p>
+                        </NavLink>
+                      </li>
+                    </>
+                  );
                 }
-                key={key}
-              >
-                <NavLink to={prop.layout + prop.path} className="nav-NavLink">
-                  <i className={prop.icon} />
-                  <p>{prop.name}</p>
-                </NavLink>
-              </li> : ''}
-              </>
-            );
+              }
           })}
         </Nav>
       </div>

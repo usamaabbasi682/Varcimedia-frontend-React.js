@@ -38,7 +38,7 @@ const Insight = ({status}) => {
                                                         </div>
                                                         <div className="widget-49-meeting-info">
                                                             <span className="widget-49-pro-title">
-                                                                { project?.title }
+                                                                Created by: { project?.user }
                                                             </span>
                                                             <span className="widget-49-meeting-time">
                                                             End Date:  { project?.end_date }
