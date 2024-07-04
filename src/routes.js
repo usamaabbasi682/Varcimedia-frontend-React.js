@@ -58,7 +58,7 @@ var routes = [
     visiable:true,
   },
   {
-    identity: "projects",
+    identity: "insights",
     path: "/project-activity",
     name: "Project Insights",
     icon: "nc-icon nc-time-alarm",
@@ -75,7 +75,7 @@ var routes = [
     visiable:false,
   },
   {
-    identity: "projects",
+    identity: "insights",
     path: "/project-discussion/:id",
     name: "Project Discussion",
     component: <ViewProject />,

@@ -17,12 +17,14 @@ const projectLists = createAsyncThunk('/projects', async (data) => {
     try {
         var url = ''
         if (data.search != null) {
-            url = `/projects?search=${data.search}`;
+            url = `/projects?search=${data.search}&insight=${data.insight}`;
         } else if (data.work_status != null) {
-            url = `/projects?work_status=${data.work_status}`;
+            url = `/projects?work_status=${data.work_status}&insight=${data.insight}`;
         } else {
-            url = `/projects?page=${data.page}`;
+            url = `/projects?page=${data.page}&insight=${data.insight}`;
         } 
+
+        console.log(url);
         
         const response = await axios({
             url:url,
