@@ -1,7 +1,6 @@
 import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
-import UserPage from "views/User.js";
 import Lists from "views/Users/Lists";
 import Projects from "views/Projects/Projects";
 import CreateUser from "views/Users/CreateUser";
@@ -121,14 +120,6 @@ var routes = [
     component: <Notifications />,
     layout: "/admin",
     visiable:true,
-  },
-  {
-    path: "/user-page",
-    name: "User Profile",
-    icon: "nc-icon nc-single-02",
-    component: <UserPage />,
-    layout: "/admin",
-    visiable:true,
-  },
+  }
 ];
 export default routes;
