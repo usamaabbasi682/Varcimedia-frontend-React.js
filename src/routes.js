@@ -11,6 +11,7 @@ import Files from "views/Projects/Files";
 import MyProjects from "views/Projects/MyProjects";
 import ProjectInsight from "views/Projects/ProjectInsight";
 import ViewProject from "views/Projects/ViewProject";
+import MyProfile from "views/Users/MyProfile";
 
 var routes = [
   {
@@ -44,6 +45,14 @@ var routes = [
     path: "/users/:id/edit",
     name: "Edit User",
     component: <EditUser />,
+    layout: "/admin",
+    visiable:false,
+  },
+  {
+    identity:"profile",
+    path: "/my-profile/:id/edit",
+    name: "My Profile",
+    component: <MyProfile />,
     layout: "/admin",
     visiable:false,
   },

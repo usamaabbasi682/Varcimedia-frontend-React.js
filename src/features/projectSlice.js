@@ -22,9 +22,7 @@ const projectLists = createAsyncThunk('/projects', async (data) => {
             url = `/projects?work_status=${data.work_status}&insight=${data.insight}`;
         } else {
             url = `/projects?page=${data.page}&insight=${data.insight}`;
-        } 
-
-        console.log(url);
+        }
         
         const response = await axios({
             url:url,

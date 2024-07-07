@@ -14,7 +14,6 @@ const dashboardData = createAsyncThunk('/dashboard', async (data) => {
         } else {
             url = "/dashboard";
         }
-        console.log(url);
         const response = await axios({
             url: url,
             method: "GET",
