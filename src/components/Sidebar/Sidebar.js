@@ -40,7 +40,7 @@ const Sidebar = (props) => {
             <img src={logo} alt="react-logo" />
           </div>
         </Link>
-        <Link to={'/admin/dashboard'} className="simple-text logo-normal"> Creative Tim </Link>
+        <Link to={'/admin/dashboard'} className="simple-text logo-normal"> VarciMedia </Link>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>

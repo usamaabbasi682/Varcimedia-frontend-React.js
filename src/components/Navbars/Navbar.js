@@ -134,33 +134,17 @@ const Header = (props) => {
             </InputGroup>
           </form>
           <Nav navbar>
-            <NavItem>
-              <Link to="#pablo" className="nav-link btn-magnify">
-                <i className="nc-icon nc-layout-11" />
-                <p>
-                  <span className="d-lg-none d-md-block">Stats</span>
-                </p>
-              </Link>
-            </NavItem>
             <Dropdown nav isOpen={dropdownOpen} toggle={(e) => dropdownToggle(e)} >
               <DropdownToggle caret nav>
-                <i className="nc-icon nc-bell-55" />
-                <p>
-                  <span className="d-lg-none d-md-block">Some Actions</span>
-                </p>
+                <i className="fas fa-user-circle" />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag="a">Action</DropdownItem>
-                <DropdownItem tag="a">Another Action</DropdownItem>
-                <DropdownItem tag="a">Something else here</DropdownItem>
+                <DropdownItem tag="span"><Link to={`/admin/my-profile/${user?.id}/edit`} className="text-dark">My Profile</Link></DropdownItem>
               </DropdownMenu>
             </Dropdown>
             <NavItem>
               <button onClick={logout} className="btn btn-sm bg-light border-0">
                 <i className="nc-icon nc-button-power text-danger font-weight-bold" />
-                <p>
-                  <span className="d-lg-none d-md-block">Logout</span>
-                </p>
               </button>
             </NavItem>
           </Nav>

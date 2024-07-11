@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const initialState = {
     users: [],
+    profile:[],
     isLoading: false,
     creating:false,
     updating: false,
@@ -69,6 +70,22 @@ const editUser = createAsyncThunk('/users/edit', async (id) => {
     }
 });
 
+const editProfile = createAsyncThunk('/users/profile/edit', async (id) => {
+    try {
+        const url = `/my-profile/${id}`;
+        const response = await axios({
+            url: url,
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
 const updateUser = createAsyncThunk('/users/update', async ({id,user}) => {
     try {
         const url = `/users/${id}`;
@@ -107,6 +124,29 @@ const deleteUserRow = createAsyncThunk('/users/delete', async (id) => {
     }
 });
 
+const profileUpdate = createAsyncThunk('/users/profile/update', async (data) => {
+    try {
+        const url = `/my-profile`;
+        const response = await axios({
+            url: url,
+            method: "PUT",
+            data: {
+                full_name: data.full_name,
+                username: data.username,
+                email: data.email,
+                password: data.password,
+                current_password: data.current_password,
+            },
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('spa_token')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+});
+
 const userSlice = createSlice({
     name: "userSlice",
     initialState,
@@ -135,6 +175,13 @@ const userSlice = createSlice({
         builder.addCase(editUser.pending, (state, action) => {
             state.isLoading = true;
         });
+        builder.addCase(editProfile.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.users = action.payload;
+        });
+        builder.addCase(editProfile.pending, (state, action) => {
+            state.isLoading = true;
+        });
         builder.addCase(updateUser.fulfilled, (state, action) => {
             state.updating = false;
             state.users = action.payload;
@@ -149,8 +196,15 @@ const userSlice = createSlice({
         builder.addCase(deleteUserRow.pending, (state, action) => {
             state.isLoading = true;
         });
+        builder.addCase(profileUpdate.fulfilled, (state, action) => {
+            state.updating = false;
+            state.profile = action.payload;
+        });
+        builder.addCase(profileUpdate.pending, (state, action) => {
+            state.updating = true;
+        });
     }
 });
 
-export { userLists, userCreate, editUser,updateUser,deleteUserRow };
+export { userLists, userCreate, editUser, updateUser, deleteUserRow, editProfile, profileUpdate };
 export default userSlice;

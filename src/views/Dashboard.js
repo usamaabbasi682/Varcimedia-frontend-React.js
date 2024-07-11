@@ -4,17 +4,9 @@ import { dashboardData } from "features/dashboardSlice";
 import useCheckLogin from "hooks/useCheckLogin";
 import useGetRole from "hooks/useGetRole";
 import { useEffect, useState } from "react";
-// react plugin used to create charts
-import { Line, Pie } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 // reactstrap components
 import { Card, CardHeader, CardBody, CardFooter, CardTitle, Row, Col } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart,
-} from "variables/charts.js";
 
 function Dashboard() {
   useCheckLogin();
@@ -61,10 +53,10 @@ function Dashboard() {
                   <p className="card-category">Last Campaign Performance</p>
                 </CardHeader>
                 <CardBody style={{ height: "266px" }}>
-                  <Pie
+                  {/* <Pie
                     data={dashboardEmailStatisticsChart.data}
                     options={dashboardEmailStatisticsChart.options}
-                  />
+                  /> */}
                 </CardBody>
                 <CardFooter>
                   {/* <div className="legend">
@@ -130,10 +122,10 @@ function Dashboard() {
                   <p className="card-category">Last Campaign Performance</p>
                 </CardHeader>
                 <CardBody style={{ height: "266px" }}>
-                  <Pie
+                  {/* <Pie
                     data={dashboardEmailStatisticsChart.data}
                     options={dashboardEmailStatisticsChart.options}
-                  />
+                  /> */}
                 </CardBody>
                 <CardFooter>
                   {/* <div className="legend">
