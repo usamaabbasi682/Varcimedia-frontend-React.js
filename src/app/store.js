@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import loginSlice from 'features/Auth/loginSlice';
+import chatHistorySlice from 'features/chatHistorySlice';
 import chatSlice from 'features/chatSlice';
 import dashboardSlice from 'features/dashboardSlice';
 import projectSlice from 'features/projectSlice';
@@ -11,7 +12,8 @@ const store = configureStore({
         'userStore': userSlice.reducer,
         'projectStore': projectSlice.reducer,
         'chatStore': chatSlice.reducer,
-        'dashboardStore': dashboardSlice.reducer
+        'dashboardStore': dashboardSlice.reducer,
+        'chatHistoryStore': chatHistorySlice.reducer
     }
 });
 

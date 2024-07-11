@@ -63,7 +63,7 @@ const Dashboard = (props) => {
               );
             } else {
               if (role == 'writer' || role == 'editor') {
-                  if (prop.identity != 'user' && prop.identity != 'projects') {
+                  if (prop.identity != 'user' && prop.identity != 'projects' && prop.identity != 'history') {
                     return (
                       <>
                         <Route path={prop.path} element={prop.component} key={key} exact />
@@ -77,7 +77,7 @@ const Dashboard = (props) => {
                     );
                   }
               } else {
-                  if (prop.identity != 'user') {
+                  if (prop.identity != 'user' && prop.identity != 'history') {
                     return (
                       <>
                         <Route path={prop.path} element={prop.component} key={key} exact />
