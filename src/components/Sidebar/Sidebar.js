@@ -58,7 +58,7 @@ const Sidebar = (props) => {
                 );
             } else {
               if ((props.role == 'writer' || props.role == 'editor') && prop.visiable) {
-                if(prop.identity != 'user' && prop.identity != 'projects' && prop.visiable) {
+                if(prop.identity != 'user' && prop.identity != 'projects' && prop.identity != 'history' && prop.visiable) {
                   return (
                     <>
                       <li className={activeRoute(prop.path) + (prop.pro ? " active-pro" : "")} key={key}>
@@ -71,7 +71,7 @@ const Sidebar = (props) => {
                   );
                 }
               } else {
-                if(prop.identity != 'user' && prop.visiable) {
+                if(prop.identity != 'user' && prop.identity != 'history' && prop.visiable) {
                   return (
                     <>
                       <li className={activeRoute(prop.path) + (prop.pro ? " active-pro" : "")} key={key}>

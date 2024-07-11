@@ -23,6 +23,7 @@ const getChats = createAsyncThunk('/chat/load', async (data) => {
         return error.response;
     }
 });
+
 const saveMessage = createAsyncThunk('/chat/save', async (data) => {
     try {
         const url = `/chat/save-message`;
@@ -39,11 +40,14 @@ const saveMessage = createAsyncThunk('/chat/save', async (data) => {
         return error.response;
     }
 });
+
 const chatSlice = createSlice({
     name: 'chatSlice',
     initialState,
     reducers: {
-        //
+        resetChats: (state) => {
+            state.chats = [];
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(saveMessage.pending, (state) => {
@@ -62,5 +66,7 @@ const chatSlice = createSlice({
         });
     }
 });
+
+export const { resetChats } = chatSlice.actions;
 export { saveMessage,getChats };
 export default chatSlice;

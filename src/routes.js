@@ -12,6 +12,7 @@ import MyProjects from "views/Projects/MyProjects";
 import ProjectInsight from "views/Projects/ProjectInsight";
 import ViewProject from "views/Projects/ViewProject";
 import MyProfile from "views/Users/MyProfile";
+import History from "views/Chat/History";
 
 var routes = [
   {
@@ -75,6 +76,15 @@ var routes = [
     visiable:true,
   },
   {
+    identity: "history",
+    path: "/chat-history",
+    name: "Chat History",
+    icon: "nc-icon nc-chat-33",
+    component: <History />,
+    layout: "/admin",
+    visiable:true,
+  },
+  {
     identity: "projects",
     path: "/my-projects",
     name: "My Projects",
@@ -120,7 +130,7 @@ var routes = [
     icon: "nc-icon nc-diamond",
     component: <Icons />,
     layout: "/admin",
-    visiable:true,
+    visiable:false,
   },
   {
     path: "/notifications",
@@ -128,7 +138,7 @@ var routes = [
     icon: "nc-icon nc-bell-55",
     component: <Notifications />,
     layout: "/admin",
-    visiable:true,
+    visiable:false,
   }
 ];
 export default routes;

@@ -110,7 +110,7 @@ const Lists = () => {
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td className="text-right" colSpan={6}>
+                                            <td className="text-right" colSpan={7}>
                                                 <Pagination users={users} setPage={setPage} page={page} />
                                             </td>
                                         </tr>
