@@ -1,15 +1,15 @@
-import React,{useState,useEffect} from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const useCheckLogin = () => {
     const navigate = useNavigate();
-    const token = sessionStorage.getItem('spa_token');
 
     useEffect(() => {
-        if (token == null || token == '') {
-            navigate('/login');
+        const token = sessionStorage.getItem("spa_token");
+        if (!token) {
+            navigate("/login", { replace: true });
         }
-    },[]);
-}
+    }, [navigate]);
+};
 
 export default useCheckLogin;
