@@ -35,7 +35,6 @@ const Header = (props) => {
   const [color, setColor] = useState("transparent");
   const sidebarToggle = useRef();
   const location = useLocation();
-  const redirect = useNavigate();
 
   const toggle = () => {
     if (isOpen) {
@@ -98,7 +97,7 @@ const Header = (props) => {
       sessionStorage.clear();
        window.location.href = '/login';
     }
-  }, [data, redirect]);
+  }, [data]);
 
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
