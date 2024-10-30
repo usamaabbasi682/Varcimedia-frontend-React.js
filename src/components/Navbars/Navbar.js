@@ -1,6 +1,8 @@
+import { logout } from "features/Auth/logoutSlice";
 import useGetData from "hooks/useGetData";
 import useGetRole from "hooks/useGetRole";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Collapse,
@@ -23,12 +25,15 @@ import {
 import routes from "routes.js";
 
 const Header = (props) => {
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.logoutStore);
+  
   const role = useGetRole();
   const user = useGetData();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const [color, setColor] = React.useState("transparent");
-  const sidebarToggle = React.useRef();
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [color, setColor] = useState("transparent");
+  const sidebarToggle = useRef();
   const location = useLocation();
   const redirect = useNavigate();
 
@@ -70,11 +75,8 @@ const Header = (props) => {
     }
   };
 
-  const logout = (e) => {
-    e.preventDefault();
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("spa_token");
-    redirect("/login");
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   React.useEffect(() => {
@@ -90,6 +92,13 @@ const Header = (props) => {
       sidebarToggle.current.classList.toggle("toggled");
     }
   }, [location]);
+
+  useEffect(() => {
+    if (data.data.success) {
+      sessionStorage.clear();
+       window.location.href = '/login';
+    }
+  }, [data, redirect]);
 
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
@@ -143,8 +152,8 @@ const Header = (props) => {
               </DropdownMenu>
             </Dropdown>
             <NavItem>
-              <button onClick={logout} className="btn btn-sm bg-light border-0">
-                <i className="nc-icon nc-button-power text-danger font-weight-bold" />
+              <button onClick={handleLogout} className="btn btn-sm bg-light border-0">
+                {data.isLoading ? <span className="spinner-border spinner-border-sm text-danger" role="status" aria-hidden="true"></span> : <i className="nc-icon nc-button-power text-danger font-weight-bold" />}
               </button>
             </NavItem>
           </Nav>

@@ -35,8 +35,8 @@ const Login = () => {
         if (data.success) {
             sessionStorage.setItem('spa_token', data.token);
             sessionStorage.setItem('user', JSON.stringify(data.data));
-            formikRef.current.setSubmitting(false);
-            formikRef.current.resetForm();
+            formikRef?.current?.setSubmitting(false);
+            formikRef?.current?.resetForm();
             navigate('/admin/dashboard');
         } else {
             formikRef?.current?.setSubmitting(false);
@@ -47,6 +47,7 @@ const Login = () => {
             setAuthError('')
         },2000);
     }, [data]);
+    
     return (
         <>
             <div className="content">
